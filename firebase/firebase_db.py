@@ -2,12 +2,12 @@ import firebase_admin
 from firebase_admin import credentials, db
 
 # Import your service account key and database URL
-from firebase.firebase_credentials import SERVICE_ACCOUNT_KEY, DATABASE_URL
+from config import Config
 
 # Initialize the app
-cred_obj = credentials.Certificate(SERVICE_ACCOUNT_KEY)
+cred_obj = credentials.Certificate(Config.SERVICE_ACCOUNT_KEY)
 default_app = firebase_admin.initialize_app(cred_obj, {
-    'databaseURL': DATABASE_URL
+    'databaseURL': Config.DATABASE_URL
 })
 
 # Reference to the root of the database
