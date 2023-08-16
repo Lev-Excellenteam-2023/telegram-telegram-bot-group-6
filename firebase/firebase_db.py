@@ -1,16 +1,12 @@
 import firebase_admin
 from firebase_admin import db
-from config import Config
 import json
-
-with open(r'C:\Users\User\Desktop\exellenteam\bot\telegram-telegram-bot-group-6\firebase\.env', "r") as file:
-    SERVICE_ACCOUNT_KEY = file.read().strip()
 
 
 def configure_database():
-    cred_obj = firebase_admin.credentials.Certificate(SERVICE_ACCOUNT_KEY)
+    cred_obj = firebase_admin.credentials.Certificate('telegrambot-365e7-firebase-adminsdk-fc7ki-3ade0542c6.json')
     default_app = firebase_admin.initialize_app(cred_obj, {
-        'databaseURL': Config.FIREBASE_URL
+        'databaseURL': 'https://telegrambot-365e7-default-rtdb.firebaseio.com/'
     })
 
 
