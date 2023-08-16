@@ -7,6 +7,7 @@ from firebase.firebase_db import add_user
 
 #import utils.py from NeuralNetwork
 
+from config import Config
 
 
 def handle_start(user_id, chat_id):
@@ -22,7 +23,5 @@ def handle_classify(user_id, chat_id, image):
 
 
 
-
-
 def send_get_request(chat_id, message):
-    requests.get(MESSAGE_URL.format(TOKEN, chat_id, message))
+    requests.get(Config.MESSAGE_URL.format(Config.TELEGRAM_TOKEN, chat_id, message))
