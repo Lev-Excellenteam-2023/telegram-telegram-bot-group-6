@@ -1,6 +1,6 @@
 from flask import Flask, Response, request
 import requests
-from main import TOKEN, MESSAGE_URL
+from config import Config
 
 
 def handle_start(user_id, chat_id):
@@ -11,7 +11,5 @@ def handle_start(user_id, chat_id):
     save_user(user_id, user_name, region, plant_type)
 
 
-
-
 def send_get_request(chat_id, message):
-    requests.get(MESSAGE_URL.format(TOKEN, chat_id, message))
+    requests.get(Config.MESSAGE_URL.format(Config.TELEGRAM_TOKEN, chat_id, message))
