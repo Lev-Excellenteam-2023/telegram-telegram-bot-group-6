@@ -1,8 +1,8 @@
 import openai
-
 from NeuralNetwork.utils import disease_dic
 from firebase.firebase_db import get_user, root_ref
 from config import Config
+import asyncio
 
 
 with open(r'C:\Users\yehuda\Documents\ExcelenTeam\Plant-Telegram-Bot\openai\env', "r") as file:
@@ -19,25 +19,43 @@ def generate_condition_info(condition):
     return condition_info
 
 
-def ask_openai(prompt):
-    response = openai.ChatCompletion.create(
-        model=Config.MODEL,
-        max_tokens=Config.MAX_TOKENS,
-        messages=[{"role": "assistant", "content": "These are the conditions of the problem: " + prompt}, {"role": "user", "content": "What should i do?"}]
-    )
-    print(response.choices[0].message.content)
+
+async def async_ask_openai(messages):
+    try:
+        response = await openai.ChatCompletion.acreate(
+            model=Config.MODEL,
+            max_tokens=Config.MAX_TOKENS,
+            messages=messages,
+            timeout=Config.TIMEOUT
+        )
+        content = response.choices[0].message.content
+        print(content)
+        messages.append({"role": "assistant", "content": content})
+        return content
+
+    except openai.error.RateLimitError as e:
+        print(f'api key get to the limit msg:{e}')
+
+    except openai.error.Timeout as e:
+        print(f'openai time out :{e}')
+
+    except openai.error.AuthenticationError as e:
+        print(f'invalid openAI token: {e}')
 
 
-def main():
+async def main():
+
+    messages = [{"role": "system", "content": "You need to verify the correctness of the disease"}]
     prompt = generate_prompt('Apple Rusk')
-    user_info = get_user('123456')
-    print(root_ref.get())
-    location = user_info['location_country']
-    print(location)
-    condition = 'Apple___Cedar_apple_rust'
-    condition_info = generate_condition_info(condition)
-    ask_openai(condition_info)
+    messages.append({"role": "user", "content": prompt})
+    await async_ask_openai(messages)
+
+    while True:
+        user_input = input(" ")
+        messages.append({"role": "user", "content": user_input})
+        await async_ask_openai(messages)
+        await asyncio.sleep(1)
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
