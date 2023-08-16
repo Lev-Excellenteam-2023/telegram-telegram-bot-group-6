@@ -1,9 +1,11 @@
 import openai
+from NeuralNetwork.utils import disease_dic
+from firebase.firebase_db import get_user, root_ref
 from config import Config
 import asyncio
 
 
-with open(r'C:\Users\User\Desktop\exellenteam\bot\telegram-telegram-bot-group-6\openai\.env', "r") as file:
+with open(r'C:\Users\yehuda\Documents\ExcelenTeam\Plant-Telegram-Bot\openai\env', "r") as file:
     OPENAI_KEY = file.read().strip()
 openai.api_key = OPENAI_KEY
 
@@ -11,9 +13,14 @@ openai.api_key = OPENAI_KEY
 def generate_prompt(estimate_problem):
     return Config.TEMPLATE_PREFIX_TO_OPENAI.format(estimate_problem)
 
+def generate_condition_info(condition):
+    condition_info = disease_dic[condition]
+    print(condition_info)
+    return condition_info
+
+
 
 async def async_ask_openai(messages):
-
     try:
         response = await openai.ChatCompletion.acreate(
             model=Config.MODEL,

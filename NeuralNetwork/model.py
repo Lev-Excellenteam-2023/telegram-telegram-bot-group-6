@@ -44,7 +44,7 @@ def predict_image(img):
 
 if __name__ == "__main__":
     #open image in bytes-like object
-    image = open(r'C:\Users\yehuda\Documents\ExcelenTeam\Plant-Telegram-Bot\Neural-Network\TestImages\AppleCedarRust3.jpeg', 'rb').read()
+    image = open(r'C:\Users\yehuda\Documents\ExcelenTeam\Plant-Telegram-Bot\NeuralNetwork\TestImages\AppleCedarRust3.jpeg', 'rb').read()
     prediction = predict_image(image)
     print(prediction)
 
