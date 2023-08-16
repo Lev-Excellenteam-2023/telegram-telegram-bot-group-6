@@ -28,8 +28,9 @@ num_classes = ['Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_r
 
 
 model = Plant_Disease_Model()
+#TODO: CHECK PATH
 model.load_state_dict(torch.load(
-    './Models/plantDisease-resnet34.pth', map_location=torch.device('cpu')))
+    r'C:\Users\yehuda\Documents\ExcelenTeam\Plant-Telegram-Bot\NeuralNetwork\Models\plantDisease-resnet34.pth', map_location=torch.device('cpu')))
 model.eval()
 
 

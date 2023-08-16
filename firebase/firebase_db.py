@@ -2,7 +2,7 @@ import firebase_admin
 from firebase_admin import credentials, db
 
 # Import your service account key and database URL
-from firebase_credentials import SERVICE_ACCOUNT_KEY, DATABASE_URL
+from firebase.firebase_credentials import SERVICE_ACCOUNT_KEY, DATABASE_URL
 
 # Initialize the app
 cred_obj = credentials.Certificate(SERVICE_ACCOUNT_KEY)
