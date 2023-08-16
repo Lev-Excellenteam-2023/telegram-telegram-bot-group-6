@@ -12,7 +12,7 @@ default_app = firebase_admin.initialize_app(cred_obj, {
 
 # Reference to the root of the database
 root_ref = db.reference()
-users_ref = root_ref.child('users')  # Reference to the 'users' node
+users_ref = root_ref.child('Users')  # Reference to the 'users' node
 
 
 def add_user(phone: str, full_name: str, location_country: str, location_city: str):
