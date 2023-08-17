@@ -4,7 +4,7 @@ class Config:
     MODEL = "gpt-3.5-turbo"
     MAX_TOKENS = 500
     TIMEOUT = 2
-    TEMPLATE_PREFIX_TO_OPENAI = "Hi openai, the user grows {}, but there is a disease there." \
+    TEMPLATE_PREFIX_TO_OPENAI = "Hi openai, the user grows plants, but there is a disease there." \
                                 "The estimate disease is {}." \
                                 "I want you to make sure that the distinction is indeed correct." \
                                 "You will ask the user questions, only one question at a time," \
@@ -18,7 +18,7 @@ class Config:
                                 "This is the information about this disease: {}." \
 
     # For Telegram bot
-    with open(r'C:\Users\User\Desktop\exellenteam\bot\telegram-telegram-bot-group-6\telegram_bot\.env', "r") as file:
+    with open(r'C:\Users\yehuda\Documents\ExcelenTeam\Plant-Telegram-Bot\env', "r") as file:
         TELEGRAM_TOKEN = file.read().strip()
     NGROK_URL = "https://8ff5-2a01-6500-a046-f352-a0ff-cd65-3597-6b28.ngrok-free.app"
     TELEGRAM_INIT_WEBHOOK_URL = "https://api.telegram.org/bot{}/setWebhook?url={}/message".format(TELEGRAM_TOKEN, NGROK_URL)
