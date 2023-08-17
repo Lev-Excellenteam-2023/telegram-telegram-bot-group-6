@@ -2,5 +2,5 @@
 venv/
 .env
 *pycache*
-env
+gpt/env
 .gitignore

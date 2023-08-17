@@ -4,7 +4,7 @@ import asyncio
 from NeuralNetwork.utils import disease_dic
 
 
-with open(r'C:\Users\yehuda\Documents\ExcelenTeam\Plant-Telegram-Bot\gpt\env', "r") as file:
+with open(r'C:\Networks\telegram-telegram-bot-group-6\gpt\env', "r") as file:
     OPENAI_KEY = file.read().strip()
 openai.api_key = OPENAI_KEY
 

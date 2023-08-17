@@ -15,6 +15,27 @@ root_ref = db.reference()
 users_ref = root_ref.child('Users')  # Reference to the 'users' node
 
 
+def add_latest_disease(phone: str, latest_disease: str):
+    """
+        Add a new Latest disease diagnose to the Firebase database.
+
+        Args:
+            phone (str): The phone number of the user.
+            latest_disease (str): The latest disease diagnose.
+
+        Returns:
+            None
+
+        Raises:
+            Exception: If an error occurs while adding the user.
+        """
+    try:
+        users_ref.child(phone).child('latest_disease').set(latest_disease)
+        print("Latest disease added successfully!")
+    except Exception as e:
+        print(f"Error adding Latest disease: {e}")
+
+
 def add_user(phone: str, full_name: str, location_country: str, location_city: str):
     """
     Add a new user to the Firebase database.

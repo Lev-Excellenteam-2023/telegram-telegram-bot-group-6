@@ -1,7 +1,7 @@
 from telegram import Update
 import requests
 from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, CallbackContext
-
+from firebase.firebase_db import add_latest_disease, get_user
 from NeuralNetwork.model import predict_image
 from telegram_bot import cancel
 
@@ -31,9 +31,11 @@ async def classify_image(update: Update, context: CallbackContext) -> int:
         # open the image in bytes-like object
         image = open('image.jpg', 'rb').read()
         disease = predict_image(image)
-
+        context.user_data['latest_disease'] = disease
+        add_latest_disease(context.user_data['phone'],disease)
         await update.message.reply_text(f"The disease is {disease}")
         return ConversationHandler.END
+
 
 # Conversation handler for the /classify command
 classify_conv = ConversationHandler(
