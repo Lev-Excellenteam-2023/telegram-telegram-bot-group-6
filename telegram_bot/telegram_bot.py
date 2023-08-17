@@ -1,9 +1,11 @@
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ConversationHandler, \
-    CallbackContext
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ConversationHandler, CallbackContext
+
 from firebase.firebase_db import add_user
 from config import Config
-from openai.openai_request import ask_openai
+from NeuralNetwork.model import predict_image
+import classify_handlers
+
 
 PHONE = 0
 COUNTRY = 1
@@ -124,6 +126,7 @@ def main():
     )
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('help', help_command))
+    app.add_handler(classify_handlers.classify_conv)
     app.add_handler(conv_handler)
     app.run_polling()
 
