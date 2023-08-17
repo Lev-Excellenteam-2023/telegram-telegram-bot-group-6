@@ -1,10 +1,7 @@
 from telegram import Update
 import requests
-from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ConversationHandler, \
-    CallbackContext
+from telegram.ext import CommandHandler, MessageHandler, ConversationHandler, CallbackContext
 
-from firebase.firebase_db import add_user
-from config import Config
 from NeuralNetwork.model import predict_image
 from telegram_bot import cancel
 
@@ -12,13 +9,15 @@ CLASSIFY = 0
 RECEIVE_IMAGE = 1
 
 
-async def get_image(update: Update, context: CallbackContext):
+# Function prompts user to send an image
+async def get_image(update: Update, context: CallbackContext) -> int:
     # Get the image from the user
     await update.message.reply_text("Please send me a photo of the plant leaf.")
     return CLASSIFY
 
 
-async def classify_image(update: Update, context: CallbackContext):
+# Function classifies the image received from user
+async def classify_image(update: Update, context: CallbackContext) -> int:
     # turn image into byte-like object
     if update.message.photo:
         image = update.message.photo[-1]
@@ -36,6 +35,7 @@ async def classify_image(update: Update, context: CallbackContext):
         await update.message.reply_text(f"The disease is {disease}")
         return ConversationHandler.END
 
+# Conversation handler for the /classify command
 classify_conv = ConversationHandler(
     entry_points=[CommandHandler('classify', get_image)],
     states={

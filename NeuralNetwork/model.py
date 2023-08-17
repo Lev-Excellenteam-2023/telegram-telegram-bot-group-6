@@ -34,7 +34,8 @@ model.load_state_dict(torch.load(
 model.eval()
 
 
-def predict_image(img):
+# Function receives image in bytes-like object and returns prediction
+def predict_image(img) -> str:
     img_pil = Image.open(io.BytesIO(img))
     tensor = transform(img_pil)
     xb = tensor.unsqueeze(0)
