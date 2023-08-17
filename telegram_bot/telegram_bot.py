@@ -4,6 +4,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 from firebase.firebase_db import add_user
 from config import Config
 import classify_handlers
+from gpt_handlers import gpt_conv
 
 PHONE = 0
 COUNTRY = 1
@@ -94,6 +95,7 @@ def main():
     )
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('help', help_command))
+    app.add_handler(gpt_conv)
     app.add_handler(classify_handlers.classify_conv)
     app.add_handler(conv_handler)
     app.run_polling()

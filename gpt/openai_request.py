@@ -1,15 +1,16 @@
 import openai
 from config import Config
 import asyncio
+from NeuralNetwork.utils import disease_dic
 
 
-with open(r'./env', "r") as file:
+with open(r'C:\Users\yehuda\Documents\ExcelenTeam\Plant-Telegram-Bot\gpt\env', "r") as file:
     OPENAI_KEY = file.read().strip()
 openai.api_key = OPENAI_KEY
 
 
 def generate_prompt(estimate_problem):
-    return Config.TEMPLATE_PREFIX_TO_OPENAI.format(estimate_problem)
+    return Config.TEMPLATE_PREFIX_TO_OPENAI.format(estimate_problem, disease_dic[estimate_problem])
 
 
 async def async_ask_openai(messages):
