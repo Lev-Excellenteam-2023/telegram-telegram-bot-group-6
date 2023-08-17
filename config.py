@@ -26,5 +26,9 @@ class Config:
 
     # For firebase
     FIREBASE_URL = 'https://telegrambot-365e7-default-rtdb.firebaseio.com/'
-    SERVICE_ACCOUNT_KEY = r'C:\Users\User\Desktop\exellenteam\bot\telegram-telegram-bot-group-6\firebase\telegrambot-365e7-firebase-adminsdk-fc7ki-3ade0542c6.json'
+
+    SERVICE_ACCOUNT_KEY = r'C:\Users\yehuda\Documents\ExcelenTeam\Plant-Telegram-Bot\firebase\telegrambot-365e7-firebase-adminsdk-fc7ki-3ade0542c6.json'
     DATABASE_URL = 'https://telegrambot-365e7-default-rtdb.firebaseio.com/'
+
+    # For NeuralNetwork
+    IMAGE_PATH = r'./user_images/'
