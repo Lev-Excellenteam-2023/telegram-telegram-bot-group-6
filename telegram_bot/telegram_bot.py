@@ -3,7 +3,6 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 
 from firebase.firebase_db import add_user
 from config import Config
-from NeuralNetwork.model import predict_image
 import classify_handlers
 
 PHONE = 0
@@ -14,17 +13,20 @@ COMMAND_DESCRIPTION = {
     '/start': 'Start the conversation with the bot',
     '/openchat': 'Open a new chat and provide your phone number, country, and city',
     '/cancel': 'Cancel the current conversation',
+    '/classify': 'Classify an image of a plant leaf',
     '/help': 'Display this help message'
 }
 
 
-async def start_command(update: Update, context: CallbackContext):
+# Command handler for the /start command
+async def start_command(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text(
         "Hi! Thanks for chatting with me!\nI am the Plant diseases detector"
         " Bot. Please type /help to see the available commands.")
 
 
-async def help_command(update: Update, context: CallbackContext):
+# Command handler for the /help command
+async def help_command(update: Update, context: CallbackContext) -> int:
     help_text = "Here are the available commands:\n\n"
     for command, description in COMMAND_DESCRIPTION.items():
         help_text += f"{command}: {description}\n"
@@ -32,13 +34,21 @@ async def help_command(update: Update, context: CallbackContext):
     await update.message.reply_text(help_text)
 
 
-async def open_new_chat_command(update: Update, context: CallbackContext):
+# Command handler for the /cancel command
+async def cancel(update: Update, context: CallbackContext):
+    await update.message.reply_text("Conversation canceled.")
+    return ConversationHandler.END
+
+
+# Command handler for the /openchat command
+async def open_new_chat_command(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text(
         "Okay, before we continue, let's start with your phone number please.")
     return PHONE
 
 
-async def get_phone(update: Update, context: CallbackContext):
+# Function gets phone number from user and saves it to user_data
+async def get_phone(update: Update, context: CallbackContext) -> int:
     phone = update.message.text
     chat_id = update.message.chat_id  # Get the chat ID of the user
     context.user_data['phone'] = phone
@@ -46,14 +56,16 @@ async def get_phone(update: Update, context: CallbackContext):
     return COUNTRY
 
 
-async def get_country(update: Update, context: CallbackContext):
+# Function gets country from user and saves it to user_data
+async def get_country(update: Update, context: CallbackContext) -> int:
     country = update.message.text
     context.user_data['country'] = country
     await context.bot.send_message(update.message.chat_id, "Please send your city")
     return CITY
 
 
-async def get_city(update: Update, context: CallbackContext):
+# Function gets city from user and saves it to user_data
+async def get_city(update: Update, context: CallbackContext) -> int:
     city = update.message.text
     context.user_data['city'] = city
 
@@ -66,29 +78,6 @@ async def get_city(update: Update, context: CallbackContext):
 
     await context.bot.send_message(update.message.chat_id, "Thank you! Your information has been saved.")
     return ConversationHandler.END
-
-
-async def get_user_input(update, context):
-    response = None
-    print("user input is gotten")
-    while response is None:
-        response = await context.update_queue.get()
-    print("i got input")
-    return response.message.text
-
-
-async def handle_invalid_input(update: Update, context: CallbackContext):
-    await context.bot.send_message(update.message.chat_id, "Invalid input. Please provide the requested information.")
-
-
-async def cancel(update: Update, context: CallbackContext):
-    await update.message.reply_text("Conversation canceled.")
-    return ConversationHandler.END
-
-
-def is_regular_text_message(update):
-    # Custom filter function to check if the message is a regular text message
-    return update.message.text and not update.message.text.startswith('/')
 
 
 def main():
