@@ -5,7 +5,7 @@ from config import Config
 import asyncio
 
 
-with open(r'C:\Users\User\Desktop\exellenteam\bot\telegram-telegram-bot-group-6\openai\.env', "r") as file:
+with open(r'./env', "r") as file:
     OPENAI_KEY = file.read().strip()
 openai.api_key = OPENAI_KEY
 
@@ -40,3 +40,18 @@ async def async_ask_openai(messages):
     except openai.error.AuthenticationError as e:
         print(f'invalid openAI token: {e}')
 
+async def main():
+    conversation_history = []
+    while True:
+        user_message = input("You: ")  # Get user input
+        conversation_history += f"User: {user_message}"
+        response = await async_ask_openai(conversation_history)  # Generate bot's response
+
+        bot_message = response.choices[0].text.strip()  # Get bot's response
+        conversation_history += f"\nBot: {bot_message}"  # Append bot's response to history
+        print("Bot:", bot_message)  # Print bot's response
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main())
