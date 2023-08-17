@@ -3,7 +3,7 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
     CallbackContext
 from firebase.firebase_db import add_user
 from config import Config
-from openai.openai_request import ask_openai
+from openai.openai_request import async_ask_openai
 
 PHONE = 0
 COUNTRY = 1
@@ -18,21 +18,29 @@ COMMAND_DESCRIPTION = {
 }
 
 
-async def start_command(update: Update):
+async def start_command(update: Update, context: CallbackContext):
     await update.message.reply_text(
         "Hi! Thanks for chatting with me!\nI am the Plant diseases detector"
         " Bot. Please type /help to see the available commands.")
 
 
-async def help_command(update: Update):
+async def help_command(update: Update, context: CallbackContext):
     help_text = "Here are the available commands:\n\n"
     for command, description in COMMAND_DESCRIPTION.items():
         help_text += f"{command}: {description}\n"
 
     await update.message.reply_text(help_text)
 
+async def talk_command(update: Update, context: CallbackContext):
+    #context.user_data['gpt_conv'] = [
+    #    {'role': 'system', 'content': Config.TEMPLATE_PREFIX_TO_OPENAI.format('Apple Scab')}]
+    reply = await async_ask_openai([
+       {'role': 'system', 'content': Config.TEMPLATE_PREFIX_TO_OPENAI.format('Apple Scab')}])
+    await context.bot.send_message(update.message.chat_id, reply)
+    add_msg_to_gpt_conv(context, role='assistant', content=reply)
+    return DIAGNOSE
 
-async def open_new_chat_command(update: Update):
+async def open_new_chat_command(update: Update, context: CallbackContext):
     await update.message.reply_text(
         "Okay, before we continue, let's start with your phone number please.")
     return PHONE
@@ -64,20 +72,18 @@ async def get_city(update: Update, context: CallbackContext):
     add_user(phone, update.effective_user.full_name, country, city)  # Modify this line according to your function
 
     await context.bot.send_message(update.message.chat_id, "Thank you! Your information has been saved.")
+    context.user_data['gpt_conv'] = [
+        {'role': 'system', 'content': Config.TEMPLATE_PREFIX_TO_OPENAI.format('Apple Scab')}]
+    reply = await async_ask_openai(context.user_data['gpt_conv'])
+    await context.bot.send_message(update.message.chat_id, reply)
+    add_msg_to_gpt_conv(context, role='assistant', content=reply)
     return DIAGNOSE
 
 
-async def validate_diagnose(update: Update, context: CallbackContext, estimated_problem: str):
-    if 'gpt_conv' not in context.user_data:
-        context.user_data['gpt_conv'] = {
-            {'role': 'system', 'content': Config.TEMPLATE_PREFIX_TO_OPENAI.format(estimated_problem)}}
-        reply = ask_openai(context.user_data['gpt_conv'])
-        add_msg_to_gpt_conv(context, role='assistant', content=reply)
-        return DIAGNOSE
-
+async def validate_diagnose(update: Update, context: CallbackContext):
     content = update.message.text
     add_msg_to_gpt_conv(context, role='user', content=content)
-    reply = ask_openai(context.user_data['gpt_conv'])
+    reply = await async_ask_openai(context.user_data['gpt_conv'])
     add_msg_to_gpt_conv(context, role='assistant', content=reply)
     return DIAGNOSE
 
@@ -124,6 +130,7 @@ def main():
     )
     app.add_handler(CommandHandler('start', start_command))
     app.add_handler(CommandHandler('help', help_command))
+    app.add_handler(CommandHandler('talk', talk_command))
     app.add_handler(conv_handler)
     app.run_polling()
 
