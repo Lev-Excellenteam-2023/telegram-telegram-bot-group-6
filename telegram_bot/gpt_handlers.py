@@ -25,7 +25,10 @@ async def haveConversation(update: Update, context: CallbackContext) -> int:
 async def continueConversation(update: Update, context: CallbackContext) -> int:
     # Get the image from the user
     user_response = update.message.text
+    if user_response == "/stop":
+        await update.message.reply_text("Conversation canceled.")
 
+        return ConversationHandler.END
     messages.append({"role": "user", "content": user_response})
     answer = await async_ask_openai(messages)
     messages.append({"role": "system", "content": answer})

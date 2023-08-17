@@ -12,7 +12,9 @@ RECEIVE_IMAGE = 1
 # Function prompts user to send an image
 async def get_image(update: Update, context: CallbackContext) -> int:
     # Get the image from the user
-    await update.message.reply_text("Please send me a photo of the plant leaf.")
+    await update.message.reply_text("C'mon, you don't need my help, big boys!\n")
+    await update.message.reply_text("Just build a neural network and train it yourself! How hard can it be?\n")
+    await update.message.reply_text("Fine.. just send me the picture already!\n")
     return CLASSIFY
 
 
@@ -32,7 +34,8 @@ async def classify_image(update: Update, context: CallbackContext) -> int:
         image = open('image.jpg', 'rb').read()
         disease = predict_image(image)
         context.user_data['disease'] = disease
-        await update.message.reply_text(f"The disease is {disease}")
+        await update.message.reply_text(f"If you ask me, I think this seems to be {disease}")
+        await update.message.reply_text("If you want to talk about it, just type /talk")
         return ConversationHandler.END
 
 # Conversation handler for the /classify command
