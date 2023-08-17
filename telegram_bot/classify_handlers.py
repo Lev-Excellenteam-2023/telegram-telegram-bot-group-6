@@ -31,7 +31,7 @@ async def classify_image(update: Update, context: CallbackContext) -> int:
         # open the image in bytes-like object
         image = open('image.jpg', 'rb').read()
         disease = predict_image(image)
-
+        context.user_data['disease'] = disease
         await update.message.reply_text(f"The disease is {disease}")
         return ConversationHandler.END
 

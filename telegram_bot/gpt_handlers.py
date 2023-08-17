@@ -15,8 +15,7 @@ messages = [{"role": "system", "content": "You need to verify the correctness of
 # Function prompts user to send an image
 async def haveConversation(update: Update, context: CallbackContext) -> int:
     # Get the image from the user
-    await update.message.reply_text("Lets have a conversation")
-    prompt = generate_prompt('Apple___Apple_scab')
+    prompt = generate_prompt(context.user_data['disease'])
     messages.append({"role": "user", "content": prompt})
     answer = await async_ask_openai(messages)
     messages.append({"role": "system", "content": answer})
@@ -43,5 +42,5 @@ gpt_conv = ConversationHandler(
         CONTINUE: [
             MessageHandler(None, callback=continueConversation)],
     },
-    fallbacks=[CommandHandler('cancel', stopConversation)])
+    fallbacks=[CommandHandler('stop', stopConversation)])
 
